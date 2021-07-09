@@ -42,3 +42,4 @@ Each txt file acts as a 'frame' of the clip; Minor variations between these text
 ## ROADMAP ##
 1) Build library of ASCII-art and animated ASCII-art
 2) Auto-colour terminal art 
+3) Generative ASCII-art
