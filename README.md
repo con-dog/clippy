@@ -24,7 +24,7 @@ clippy is your *friend* if you are;
 |<p align="center"><img src="media/sea.gif" height="300" width="500"></p>|<p align="center">.................<br>........~...v....<br>.........../&#124;....<br>.....v..../_&#124;__..<br>.........&#92;-----/.<br>~~~~~~~~~`~~~~~~'</p>|
 
 ## How clippy works ##
-A given directory, say, art/sea contains multiple txt files of a ship at sea. clippy looks at all the txt files in the directory and sequentially prints to the console output and handles cursor movement.
+clippy looks at all the txt files in a directory, and sequentially prints each file to the console in the same line/column position.
 
 Each txt file acts as a 'frame' of the clip; Minor variations between these text files creates the animation! 
 
