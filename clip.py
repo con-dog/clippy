@@ -47,8 +47,13 @@ sea_1d.txt
 .....\-----/.....
 ~~~~~`~~~~~~'~~~~
 
-Any art samples you create should be of a frame-by-frame nature,
-saved to a directory under 'art' in the repo
+Any art samples you create should be of a frame-by-frame nature as above,
+saved to a directory under 'art' in the repo. Eg a horse sample may be in
+the directory 'art/animals/horse' with a few text files such as:
+'horse_1a.txt', 'horse_1b.txt', horse_1c.txt' 
+
+For ASCII art ideas visit https://www.asciiart.eu/ and credit the original
+author if copying
 """
 
 import argparse
