@@ -1,7 +1,7 @@
 
 <p align="center"><img src="media/clippy_watermarked.gif" height="300" width="500"></p>
 
-# clippy - 
+# clippy
 Create *animated ASCII-art* for the command line! 
 
 clippy stands for:
