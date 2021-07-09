@@ -2,14 +2,19 @@
   <img src="media/clippy_logo_open.jpg" alt="clippy logo" width=100%>
 </p>
 
-# clippy
-Create *animated ASCII-art* for the command line!
+# clippy - 
+Create *animated ASCII-art* for the command line! 
+
+clippy stands for:
+command line interface player made in python
+
+<p align="center"><img src="media/clippy_watermarked.gif" height="300" width="500"></p>
 
 clippy is your *friend* if you are;
 - Developing a rogue-like ASCII game
 - Creating a TUI
 - Wanting to make ASCII-art
-- Wanting to make ***animated*** ASCII ar
+- Wanting to make ***animated*** ASCII art
 
 ## Example ##
 
