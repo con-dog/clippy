@@ -14,6 +14,7 @@ clippy is your *friend* if you are;
 - Wanting to make ASCII-art
 - Wanting to make ***animated*** ASCII art
 - Wanting to explore the Python standard library
+- Creating a CLI Screensaver
 
 ## Example Animation ##
 
