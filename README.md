@@ -15,8 +15,9 @@ clippy is your *friend* if you are;
 - Creating a TUI
 - Wanting to make ASCII-art
 - Wanting to make ***animated*** ASCII art
+- Wanting to explore the Python standard library
 
-## Example ##
+## Example Animation ##
 
 | Get this clip | From this txt file/s! |
 | -------- | ---------- |
