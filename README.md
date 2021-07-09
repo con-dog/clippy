@@ -11,7 +11,7 @@ command line interface player made in python
 clippy is your *friend* if you are;
 - Developing a rogue-like ASCII game
 - Creating a TUI
-- Wanting to animate company names/logos in your code intro banner
+- Wanting to animate company names/logos in your programs intro banner
 - Wanting to make ASCII-art
 - Wanting to make ***animated*** ASCII art
 - Wanting to explore the Python standard library
