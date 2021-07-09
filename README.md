@@ -38,3 +38,7 @@ Each txt file acts as a 'frame' of the clip; Minor variations between these text
 
 4) Run clip.py and pass the relative path of the directory containing your txt files (frames), pass it the speed (1-100), and pass it the number of cycles to run (1-1000)
 5) Enjoy and contribute your art here! Submit a pull request of your art to this repo!
+
+## ROADMAP ##
+1) Build library of ASCII-art and animated ASCII-art
+2) Auto-colour terminal art 
