@@ -13,6 +13,7 @@ clippy can help if you are wanting to;
 - Make ASCII-art
 - Make coloured ASCII art
 - Make animated ASCII art
+- Only use the Python standard library!
 
 ## Example Animations ##
 
