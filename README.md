@@ -4,11 +4,7 @@
 # clippy
 Create and play coloured (or not) animated ASCII-art in the command line! 
 
-clippy stands for:
-command line interface player made in python
-
-
-clippy is your *friend* if you are wanting to;
+clippy can help if you are wanting to;
 - Develop a rogue-like ASCII game
 - Develop word games (animate text)
 - Develeop TUI's or CUI's
