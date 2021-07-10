@@ -2,20 +2,21 @@
 <p align="center"><img src="media/clippy_watermarked.gif" height="300" width="500"></p>
 
 # clippy
-Create and play coloured (or not) *animated ASCII-art* in the command line! 
+Create and play coloured (or not) animated ASCII-art in the command line! 
 
 clippy stands for:
 command line interface player made in python
 
 
-clippy is your *friend* if you are;
-- Developing a rogue-like ASCII game
-- Creating a TUI
-- Wanting to animate company names/logos in your programs intro banner
-- Wanting to make ASCII-art
-- Wanting to make ***animated*** ASCII art
-- Wanting to explore the Python standard library
-- Creating a CLI Screensaver
+clippy is your *friend* if you are wanting to;
+- Develop a rogue-like ASCII game
+- Develop word games (animate text)
+- Develeop TUI's or CUI's
+- Develop a Terminal screensaver
+- Create animated company names/logo intro banners in your scripts
+- Make ASCII-art
+- Make coloured ASCII art
+- Make animated ASCII art
 
 ## Example Animation ##
 
