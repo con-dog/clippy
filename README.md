@@ -14,7 +14,13 @@ clippy can help if you are wanting to;
 - Make coloured ASCII art
 - Make animated ASCII art
 
-## Example Animation ##
+## Example Animations ##
+
+1) txt to clip!
+2) animated script logo
+3) coloured vs colourless
+4) animated vs non-animated
+
 
 | Get this clip | From this txt file/s! |
 | -------- | ---------- |
