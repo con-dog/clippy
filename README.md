@@ -9,7 +9,7 @@ clippy can help if you are wanting to;
 - Develop word games (animate text)
 - Develeop TUI's or CUI's
 - Develop a Terminal screensaver
-- Create animated company names/logo intro banners in your scripts
+- Create animated logos for your scripts
 - Make ASCII-art
 - Make coloured ASCII art
 - Make animated ASCII art
