@@ -2,7 +2,7 @@
 <p align="center"><img src="media/clippy_watermarked.gif" height="300" width="500"></p>
 
 # clippy
-Create and play coloured 🟥🟩🟦 or color-less ⬛️⬜️ animated ASCII-art in the command line! 
+Create and play coloured 🟥🟩🟦 or color-less ⬛️⬜️ animated, or static, ASCII-art in the command line! 
 
 clippy can help if you are wanting to;
 - Develop a rogue-like ASCII game
