@@ -2,20 +2,37 @@
 DO NOT DELETE THE AUTHOR COPYRIGHT
 ©Connor Talbot 2021 - https://github.com/con-dog/clippy
 
-clip.py - Animate a given directory of text files.
+clip.py - Animate and color a given directory of .txt files.
 
 The text files in the directory provided should be 'frames' in a sequence
-to give the impression of animation.
+to give the impression of animation. For steps to make your own, visit the
+GitHub link ReadMe. Its very easy!
 
 Example:
-In a directory called 'art/sea', there is a few text files:
+In the directory: "clip/art/sea/boats/small_boat_1" there are a few text files
+under a subfolder called "ascii":
+small_boat_1a, small_boat_1b, small_boat_1c, ... small_boat_1f etc
 
-Eg: sea_1a, sea_1b, sea_1c, sea_1d
+ clip
+    ├───art
+    ├───animals
+    ...
+    ...
+    └───sea
+        └───boats
+            └───small_boat_1
+                ├───ascii
+                |       └───small_boat_1a.txt
+                |       └───small_boat_1b.txt
+                |       ...
+                |       ...
+                |       └───small_boat_1h.txt
+                └───color
 
-Which clearly show a boat and a bird moving (frame by frame)
+Stepping through these clearly shows a boat (and a bird) moving frame by frame
 
-sea_1a.txt
-----------
+small_boat_1a.txt
+-----------------
 .................
 ........~...v....
 .........../|....
@@ -23,7 +40,8 @@ sea_1a.txt
 .........\-----/.
 ~~~~~~~~~`~~~~~~'
 
-sea_1b.txt
+small_boat_1b.txt
+-----------------
 .................
 .......~...v.....
 ........../|...\,
@@ -31,102 +49,284 @@ sea_1b.txt
 ........\-----/..
 ~~~~~~~~`~~~~~~'~
 
-sea_1c.txt
-.................
-.....~...v.......
-......../|.../`\.
-..v..../_|__.....
-......\-----/....
-.~~~~~`~~~~~~'~~~
+.....
+.....
 
-sea_1d.txt
-.................
-....~...v..\,/...
-......./|........
-.v..../_|__......
-.....\-----/.....
-~~~~~`~~~~~~'~~~~
+small_boat_1h.txt
+-----------------
+... /`\..........
+...v.............
+../|.............
+./_|__...........
+\-----/..........
+`~~~~~~'~~~~~~~~~
 
-Any art samples you create should be of a frame-by-frame nature as above,
-saved to a directory under 'art' in the repo. Eg a horse sample may be in
-the directory 'art/animals/horse' with a few text files such as:
-'horse_1a.txt', 'horse_1b.txt', horse_1c.txt' 
+
+Any art samples you create should be of a frame-by-frame nature as above ordered
+alphabetically with lowercase lettering. Frame play order is dictated by 
+this alphabetical order.
+
+All files shall be saved to a relevant directory under the "art" directory in 
+the repo. 
+
+Note that you can also color in your art, but you have to create another txt
+file in another subfolder called "color" that holds the color mappings to 
+accompany the art file for each frame eg:
+small_boat_1a.txt, small_boat_1a_color.txt, .... etc
+''
 
 For ASCII art ideas visit https://www.asciiart.eu/ and credit the original
 author if copying
 """
 
 import argparse
+from collections import Counter
 from contextlib import ExitStack
 import glob
-import math
 import os
-import random
+import re
 import sys
 import time
 
-# MOVE CURSOR
+# COLORS: FOREGROUND = F, BACKGROUND = B, Value = ANSI value
+COLORS = {
+    'F_BLK': '\033[30m', 'B_BLK': '\033[40m',  # BLACK
+    'F_RED': '\033[31m', 'B_RED': '\033[41m',  # RED
+    'F_GRN': '\033[32m', 'B_GRN': '\033[42m',  # GREEN
+    'F_YLW': '\033[33m', 'B_YLW': '\033[43m',  # YELLOW
+    'F_BLU': '\033[34m', 'B_BLU': '\033[44m',  # BLUE
+    'F_MGT': '\033[35m', 'B_MGT': '\033[45m',  # MAGENTA
+    'F_CYA': '\033[36m', 'B_CYA': '\033[46m',  # CYAN
+    'F_WHT': '\033[37m', 'B_WHT': '\033[47m',  # WHITE
+    'F_BWN': '\033[38;5;130m', 'B_BWN': '\033[48;5;130m',  # BROWN
+    'F_GRY': '\033[38;5;153m', 'B_GRY': '\033[48;5;153m',  # GRAY
+    'F_TRQ': '\033[38;5;50m', 'B_TRQ': '\033[48;5;50m',  # TURQUOISE
+    'F_NVY': '\033[38;5;33m', 'B_NVY': '\033[48;5;33m',  # NAVY
+    'F_STN': '\033[38;5;153m', 'B_STN': '\033[48;5;153m',  # STONE
+    'F_MRN': '\033[38;5;160m', 'B_MRN': '\033[48;5;160m',  # MORNING
+    'F_ONG': '\033[38;5;202m', 'B_ONG': '\033[48;5;202m',  # ORANGE
+    'F_DSK': '\033[38;5;203m', 'B_DSK': '\033[48;5;203m',  # DUSK
+    'F_SND': '\033[38;5;229m', 'B_SND': '\033[48;5;229m',  # SAND
+}
+
+# DEFAULT COLORS AND PLACEHOLDER CHARACTER
+DEFAULT_FG = COLORS['F_WHT']
+DEFAULT_BG = COLORS['B_BLK']
+PLACEHOLDER_CHAR = '.'
+PLACEHOLDER_COLOR = F"{COLORS['F_BLK']}{COLORS['B_BLK']}"
+PLACEHOLDER = F'{PLACEHOLDER_COLOR}{PLACEHOLDER_CHAR}'
+
+# CURSOR ANSI ESCAPE PATTERNS
 CURSOR_UP = '\033[1A'  # moves cursor up one line
 CURSOR_DOWN = '\033[1B'  # moves cursor up one line
-CURSOR_RESET = '\033[u'
+CURSOR_RESET = '\033[u'  # resets the cursor
+CURSOR_OFF = '\033[?25l'  # makes cursor invisible
+CURSOR_ON = '\033[?25h'  # makes cursor visible
+CURSOR_SAVE_POS = '\033[s'  # saves cursor position
+CURSOR_RESTORE_POS = '\033[u'  # returns cursor to last saved position
 
-# Create the parser
-my_parser = argparse.ArgumentParser(description='Animate frames in a cli')
 
-# Add the arguments
-my_parser.add_argument(
-    'Path', metavar='path', type=str, help='the relative path to the frames',
-    )
-my_parser.add_argument(
-    'Speed', metavar='speed', type=int, help='the animation speed from 1-100'
-    )
-my_parser.add_argument(
-    'Cycles', metavar='cycles', type=int, help='thenumber of times to cycle the'
-    ' animation from 1-100'
-    )
+def make_cli_parser():
+    """Make the modules default argparser"""
+    parser = argparse.ArgumentParser(
+        description='Animate and color ASCII art in the cli',
+        usage='use "%(prog)s --help" for more information',
+        formatter_class=argparse.RawTextHelpFormatter
+        )
+
+    parser.add_argument(
+        'path', metavar='path', type=str, 
+        help="""If your folder is 'small_boat_1', then you would pass:
+
+art/sea/boats/small_boat_1
+
+eg: Directory structure of clippy is like so:
+
+    C:.
+    └───art
+    ├───animals
+    ├───buildings
+    │   ├───castles
+    │   │   └───castle_1
+    │   └───houses
+    │       └───small_home_1
+    ...
+    ...
+    ...
+    └───sea
+        └───boats
+            └───small_boat_1
+                ├───ascii
+                └───color
+
+"""
+        )
+        
+    parser.add_argument(
+        'speed', metavar='speed', type=int, help='the play speed from 1-100'
+        )
+
+    parser.add_argument(
+        'cycles', metavar='cycles', type=int, help='the number of times to '
+        'cycle the animation from 1-1000'
+        )
+
+    parser.add_argument(
+        '-c', '--color', dest='color', action='store_true',
+        help='pass this flag to color the ASCII art'
+        )
+
+    parser.set_defaults(color=False)
+    args = parser.parse_args()
+    return args
+
 
 class ClipException(Exception):
     """Raise Exception if Clip class methods are misused"""
     pass
 
+
 class Clip:
-    """
-    A class to manage all aspects of a clip
-    """
-    def __init__(self, frames_source_folder, animation_speed, animation_cycles):
+    """A class to manage all aspects of a clip."""
+    def __init__(self, source_folder, play_speed, play_cycles, color=False):
         """Initialize instance of Tile"""
         os.system('color')  # Required to work, enables ANSI codes
-        self._frames_source_folder = frames_source_folder
-        self.animation_speed = 5*math.log(100/animation_speed) + 0.1
-        self.animation_cycles = animation_cycles
-        if not isinstance(self.animation_cycles, int):
-            raise ClipException('Cycles must be an integer')
-        if (self.animation_cycles < 1) or (self.animation_cycles > 1000):
-            raise ClipException('Cycles must be an integer from 1-1000')
+        os.system('cls')  # Clear cli
+        sys.stdout.write(CURSOR_OFF)
+        self._source_folder = source_folder
+        self.play_speed = 5.1 - (play_speed/20)
+        self.play_cycles = play_cycles
+        self._color = color
+        ascii_sub = f'{self.source_folder}\\ascii'
+        color_sub = f'{self.source_folder}\color'
+        if not os.path.isdir(ascii_sub):
+            raise ClipException("""
+                    Your folder specified by path, must contain a subfolder 
+                    called 'ascii'. This ascii subfolder must contain at least 
+                    1 txt file. Your folder hierarchy should look similar to:
+
+                    C:.
+                    └───art
+                        ├───animals
+                        ├───buildings
+                        │   └───castles
+                        ...     └───my_folder
+                                    └───ascii
+                                        └───my_art_1.txt
+                                        └───my_art_2.txt
+                                        ...
+                                        ...
+                                        └───my_art_n.txt
+
+                    """)
+        if not isinstance(self.play_cycles, int):
+            raise ClipException('play cycles must be an integer')
+        if (self.play_cycles < 1) or (self.play_cycles > 1000):
+            raise ClipException('play cycles must be an integer from 1-1000')
+        if not isinstance(play_speed, int):
+            raise ClipException('Speed must be an integer from 1-100')
+        if (play_speed < 1) or (play_speed > 100):
+            raise ClipException('Speed must be an integer from 1-100')
+        if (not isinstance(self._color, bool)):
+            raise ClipException('colorless by default - pass "True" for color')
+        if color:
+            if not os.path.isdir(color_sub):
+                raise ClipException("""
+                        When passing color flag, folder specified by path, must
+                        contain a subfolder called 'color'. 
+                        """)
+            if len(os.listdir(ascii_sub)) != len(os.listdir(color_sub)):
+                raise ClipException("""
+                        When passing color flag, the subfolders 'ascii' and
+                        'color' must contain an equal number of txt files to
+                        ensure color mappings are correct.
+                        """)
 
     @property
-    def frames_source_folder(self):
+    def source_folder(self):
         """Instance read only property"""
-        return self._frames_source_folder
+        return self._source_folder
+
+    @property
+    def color(self):
+        """Instance read only property"""
+        return self._color
 
     def get_frames(self):
-        """Get all the frame art from the given directory"""
-        # get all .txt in dir
-        filenames = glob.glob(f"{self.frames_source_folder}{'./*.txt'}")  
+        """Get all the frame art from the ascii sub-directory in alphabetical
+        order."""
+        # get all /ascii/*.txt files in dir. These are the ascii frames
+        filenames = glob.glob(f"{self.source_folder}{'./ascii./*.txt'}")  
         with ExitStack() as stack:  # dynamically handle multi file opens/closes
-            files = [stack.enter_context(open(fname)) for fname in filenames]
-            if files:
-                frames = []
-                for f in files:  # iterate over the frame files list
-                    frame = f.read().splitlines()
-                    frames.append(frame)
-                self.frames = frames
+            self.ascii_files = [stack.enter_context(open(f)) for f in filenames]
+            if self.ascii_files:
+                self.frames = []
+                for f in self.ascii_files:  # iterate over the frame files list
+                    frame = []
+                    lines = f.read().splitlines()
+                    for line in lines:
+                        row = list(line)  # becomes a [row][column] structure
+                        frame.append(row)
+                    self.frames.append(frame)
+
+    def set_char_base_color(self):
+        """Loop over each frames characters, and set them to defaults"""
+        for f, frame in enumerate(self.frames):
+            for r, row in enumerate(frame):
+                for c, char in enumerate(self.frames[f][r]):
+                    if char != PLACEHOLDER_CHAR:
+                        self.frames[f][r][c] = f'{DEFAULT_FG}{DEFAULT_BG}{char}'
+                    else:
+                        self.frames[f][r][c] = PLACEHOLDER
+
+    def get_frame_color_maps(self):
+        """Get all the color mappings from the color sub-directory in 
+        alphabetical order."""
+        # get all /color/*.txt files in dir. These are the color mappings
+        filenames = glob.glob(f"{self.source_folder}{'./color./*.txt'}")  
+        with ExitStack() as stack:  # dynamically handle multi file opens/closes
+            self.color_files = [stack.enter_context(open(f)) for f in filenames]
+            if self.color_files:
+                self.frame_color_maps = []
+                for f in self.color_files:  # iterate over the frame files list
+                    lines = f.read().splitlines()
+                    # Remove any empty lines. Required for regex
+                    frame_color_map = list(line for line in lines if line)
+                    self.frame_color_maps.append(frame_color_map)
             else:
                 raise ClipException('Path must include txt files!')
 
-    def paint_cells(self):
-        """Paint the cells in the tiles"""
-        pass
+    def color_cells(self):
+        """Color the cells by mapping the frames color map to that frames 
+        characters"""
+        map_regex = re.compile(r'''
+            \[(\d*)\]  # group 1: Match [digit/s] for row
+            \[(\d*)\]  # group 2: Match [digit/s] for column
+            [\s=\s]*  # get everything around equals sign
+            (\w*[^,])  # group 3: match the 1st color (not optional)
+            (,[\s]*(\w*))?  # group 5: match an optional second color
+            ''', re.VERBOSE
+            )
+        # need the index of the frame_color_map to map to the corresponding 
+        # frame in self.frames
+        for frame_index, frame_color_map in enumerate(self.frame_color_maps):
+            char_update_operations = []
+            rows = []
+            for char_color_map in frame_color_map:
+                mo = map_regex.search(char_color_map)
+                row = int(mo.group(1))
+                column = int(mo.group(2))
+                color_1_text = mo.group(3)
+                color_2_text = mo.group(5)
+                # just get the ASCII character, not its color!
+                char = self.frames[frame_index][row][column][-1]
+
+                # map colors string to COLORS variables constants values
+                color_1 = COLORS.get(color_1_text, '')
+                color_2 = COLORS.get(color_2_text, '')
+                        
+                updated_char = f"{color_1}{color_2}{char}"
+                self.frames[frame_index][row][column] = updated_char
 
     def play_clip(self):
         """Loop through a clips frames to display it to screen at the given
@@ -134,36 +334,43 @@ class Clip:
         sys.stdout.flush()
         for frame in self.frames:
             for row in frame:  # Iterate over each frames rows
-                sys.stdout.write(row)
+                for char in row:
+                    sys.stdout.write(char)
                 sys.stdout.write('\n')  # newline after all cells in row shown
+            sys.stdout.write(CURSOR_SAVE_POS)  # save cursor position
             # Move cursor back to top of display and draw next frame
             sys.stdout.write(CURSOR_UP*len(frame))
-            time.sleep(self.animation_speed)
+            time.sleep(self.play_speed)
 
     def loop_clip(self):
         """Loop through the clip the given number of cycles"""
-        while self.animation_cycles > 1:
+        while self.play_cycles > 1:
             self.play_clip()
-            self.animation_cycles -= 1
-        os.system('cls')
+            self.play_cycles -= 1
+        sys.stdout.write(CURSOR_RESTORE_POS)  # restore cursor to saved position
         
     def run(self):
         """Call instance functions to animate the frames to the screen and cycle
-        them 'x' times"""
-        clip.get_frames()
-        clip.play_clip()
-        clip.loop_clip()
+        the animation"""
+        self.get_frames()
+        self.set_char_base_color()
+        if self.color:
+            self.get_frame_color_maps()
+            self.color_cells()
+        self.play_clip()
+        self.loop_clip()
+        sys.stdout.write(CURSOR_ON)
+        sys.stdout.write(COLORS['F_WHT'] + COLORS['B_BLK'])
+
+
+def clippy(path, speed, cycles, color):
+    """main function for module"""
+    clip = Clip(path, speed, cycles, color)
+    clip.run()
 
 
 if __name__ == '__main__':
-    args = my_parser.parse_args()
-    path = args.Path
-    cycles = int(args.Cycles)
-    speed = int(args.Speed)
-    if not isinstance(speed, int):
-        raise ClipException('Speed must be an integer from 1-100')
-    if (speed < 1) or (speed > 100):
-            raise ClipException('Speed must be an integer from 1-100')
-    clip = Clip(path, speed, cycles)
-    clip.run()
-
+    args = make_cli_parser()
+    clippy(args.path, args.speed, args.cycles, args.color)
+    
+    
