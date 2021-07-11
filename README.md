@@ -2,7 +2,7 @@
 <p align="center"><img src="media/clippy_watermarked.gif" height="300" width="500"></p>
 
 # clippy
-Create and play coloured 🟥🟩🟦 or color-less ⬛️⬜️ animated, or static, ASCII-art in the command line! 
+Create and play colored 🟥🟩🟦 or colorless ⬛️⬜️ animated, or static, ASCII-art in the command line! 
 
 clippy can help if you are wanting to;
 - Develop a rogue-like ASCII game
@@ -19,7 +19,7 @@ clippy can help if you are wanting to;
 
 1) txt to clip!
 2) animated script logo
-3) coloured vs colourless
+3) colored vs colorless
 4) animated vs non-animated
 
 
