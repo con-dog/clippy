@@ -14,6 +14,9 @@ clippy can help if you are wanting to;
 - Make animated ASCII art
 - Only use the Python standard library!
 
+## State ##
+***OPEN TO CONTRIBUTIONS***
+
 ## Example Animation ##
 | Get this clip | From this txt file/s! |
 | -------- | ---------- |
