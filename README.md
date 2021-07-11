@@ -25,7 +25,7 @@ clippy can help if you are wanting to;
 
 | Get this clip | From this txt file/s! |
 | -------- | ---------- |
-|<p align="center"><img src="media/sea.gif" height="300" width="500"></p>|<p align="center">.................<br>........~...v....<br>.........../&#124;....<br>.....v..../_&#124;__..<br>.........&#92;-----/.<br>~~~~~~~~~`~~~~~~'</p>|
+|<p align="center"><img src="media/boat_color.gif" height="300" width="500"></p>|<p align="center">.................<br>........~...v....<br>.........../&#124;....<br>.....v..../_&#124;__..<br>.........&#92;-----/.<br>~~~~~~~~~`~~~~~~'</p>|
 
 ## How clippy works ##
 clippy looks at all the txt files in a directory, and sequentially prints each file to the console in the same line/column position.
