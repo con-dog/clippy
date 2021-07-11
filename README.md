@@ -1,4 +1,4 @@
-<p align="center"><img src="media/clippy_watermarked.gif" height="300" width="500"></p>
+<p align="center"><img src="media/clippy_watermarked (1).gif" height="300" width="500"></p>
 
 # clippy
 Create and play colored 🟥🟩🟦 or colorless ⬛️⬜️ animated, or static, ASCII-art in the command line! 
